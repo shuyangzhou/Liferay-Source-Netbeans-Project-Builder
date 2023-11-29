@@ -57,6 +57,10 @@ public class MavenUtil {
 
 	private static final Path _cachePath = Paths.get(".m2-cache");
 
+	public static Dependency toDependency(Coordinate coordinate) {
+		return coordinate.toDependency(_cachePath);
+	}
+
 	public static boolean resolve(Coordinate coordinate)
 		throws IOException {
 
@@ -233,6 +237,15 @@ public class MavenUtil {
 
 		for (List<Coordinate> coordinates : _mavenCoordinates.values()) {
 			mergedCoordinates.addAll(coordinates);
+		}
+
+		Properties portalLibProperties = PropertiesUtil.loadProperties(
+			portalPath.resolve("lib/portal/dependencies.properties"));
+
+		for (Object value : portalLibProperties.values()) {
+			Coordinate coordinate = new Coordinate(String.valueOf(value));
+
+			mergedCoordinates.add(coordinate);
 		}
 
 		mergedCoordinates.addAll(_coordinateTestWhitelist);

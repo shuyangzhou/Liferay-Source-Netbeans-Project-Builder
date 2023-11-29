@@ -14,19 +14,15 @@
 
 package com.liferay.netbeansproject.util;
 
+import com.liferay.netbeansproject.container.Coordinate;
 import com.liferay.netbeansproject.container.Dependency;
 
 import java.io.IOException;
 
-import java.nio.file.FileVisitOption;
-import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.attribute.BasicFileAttributes;
 
-import java.util.EnumSet;
+import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -38,30 +34,29 @@ public class ModuleUtil {
 	public static Set<Dependency> getPortalLibJars(Path portalPath)
 		throws IOException {
 
-		final Set<Dependency> jarSet = new TreeSet<>();
+		Set<Dependency> jarSet = new TreeSet<>();
 
-		Files.walkFileTree(
-			portalPath.resolve("lib"), EnumSet.allOf(FileVisitOption.class),
-			Integer.MAX_VALUE,
-			new SimpleFileVisitor<Path>() {
+		Properties developmentLibProperties = PropertiesUtil.loadProperties(
+			portalPath.resolve("lib/development/dependencies.properties"));
 
-				@Override
-				public FileVisitResult visitFile(
-						Path filePath, BasicFileAttributes attrs)
-					throws IOException {
+		for (Object value : developmentLibProperties.values()) {
+			Dependency dependency = MavenUtil.toDependency(new Coordinate(String.valueOf(value)));
 
-					String filePathString = filePath.toString();
+			if (Files.exists(dependency.getPath())) {
+				jarSet.add(dependency);
+			}
+		}
 
-					if (filePathString.endsWith(".jar")) {
-						jarSet.add(
-							new Dependency(
-								Paths.get(filePathString), null, false));
-					}
+		Properties portalLibProperties = PropertiesUtil.loadProperties(
+			portalPath.resolve("lib/portal/dependencies.properties"));
 
-					return FileVisitResult.CONTINUE;
-				}
+		for (Object value : portalLibProperties.values()) {
+			Dependency dependency = MavenUtil.toDependency(new Coordinate(String.valueOf(value)));
 
-			});
+			if (Files.exists(dependency.getPath())) {
+				jarSet.add(dependency);
+			}
+		}
 
 		return jarSet;
 	}

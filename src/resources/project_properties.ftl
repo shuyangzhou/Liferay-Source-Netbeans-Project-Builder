@@ -120,6 +120,9 @@ reference.${dependency}.jar=${"$"}{project.${dependency}}/dist/${dependency}.jar
 
 <#list portalLibJars as jarDependency>
 file.reference.${jarDependency.getName()}=${jarDependency.getPath()}
+<#if jarDependency.getSourcePath()??>
+source.reference.${jarDependency.getName()}=${jarDependency.getSourcePath()}
+</#if>
 </#list>
 
 javac.classpath=\
