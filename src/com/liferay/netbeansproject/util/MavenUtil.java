@@ -268,12 +268,51 @@ public class MavenUtil {
 		System.out.println("Skipped " + (mergedCoordinates.size() - resolved) + " coordinates, resolved " + resolved + " coordinates");
 	}
 
+	private static String _parseVersion(String line, String buildGradleContent) {
+		int versionStartIndex = line.indexOf("version: \"");
+
+		if (versionStartIndex == -1) {
+			versionStartIndex = line.indexOf("version: ");
+
+			if (versionStartIndex == -1) {
+				return null;
+			}
+
+			versionStartIndex += "version: ".length();
+
+			String versionVariable = line.substring(versionStartIndex, line.length()).trim();
+
+			String versionDeclare = versionVariable + " = \"";
+
+			versionStartIndex = buildGradleContent.indexOf(versionDeclare);
+
+			if (versionStartIndex == -1) {
+				return null;
+			}
+
+			versionStartIndex += versionDeclare.length();
+
+			return buildGradleContent.substring(versionStartIndex, buildGradleContent.indexOf('"', versionStartIndex));
+		}
+
+		versionStartIndex += "version: \"".length();
+
+		int versionEndIndex = line.indexOf('"', versionStartIndex);
+
+		if (versionEndIndex == -1) {
+			return null;
+		}
+
+		return line.substring(versionStartIndex, versionEndIndex);
+	}
 	private static List<Coordinate> _parseCoordinates(Path buildGradlePath)
 		throws IOException {
 
 		List<Coordinate> coordinates = new ArrayList<>();
 
-		for (String line : Files.readAllLines(buildGradlePath)) {
+		String buildGradleContent = new String(Files.readAllBytes(buildGradlePath));
+
+		for (String line : StringUtil.split(buildGradleContent, '\n')) {
 			line = line.trim();
 
 			if (line.startsWith("parentThemes") || line.startsWith("match(")) {
@@ -314,21 +353,11 @@ public class MavenUtil {
 
 			String name = line.substring(nameStartIndex, nameEndIndex);
 
-			int versionStartIndex = line.indexOf("version: \"");
+			String version = _parseVersion(line, buildGradleContent);
 
-			if (versionStartIndex == -1) {
+			if (version == null) {
 				continue;
 			}
-
-			versionStartIndex += "version: \"".length();
-
-			int versionEndIndex = line.indexOf('"', versionStartIndex);
-
-			if (versionEndIndex == -1) {
-				continue;
-			}
-
-			String version = line.substring(versionStartIndex, versionEndIndex);
 
 			// TODO Make sure these are added as a project dependency
 
