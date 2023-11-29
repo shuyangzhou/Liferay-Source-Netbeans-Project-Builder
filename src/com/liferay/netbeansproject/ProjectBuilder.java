@@ -126,7 +126,7 @@ public class ProjectBuilder {
 						return FileVisitResult.SKIP_SUBTREE;
 					}
 
-					if (!Files.exists(path.resolve("src")) && !path.getParent().getFileName().toString().equals("third-party")) {
+					if (!Files.exists(path.resolve("src")) && !path.getParent().getFileName().toString().equals("third-party") && !path.getParent().getFileName().toString().equals("shared-dependencies")) {
 						return FileVisitResult.CONTINUE;
 					}
 
