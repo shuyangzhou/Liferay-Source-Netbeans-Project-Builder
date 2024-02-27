@@ -80,7 +80,16 @@ public class MavenUtil {
 			_downloadSourcesFile(filePath, location);
 		}
 		catch (IOException ioException) {
-			_logger.log(Level.SEVERE, "Unable to resolve " + coordinate + " from " + location);
+			String altLocation = _LIFERAY_REPO + filePath;
+
+			try {
+				_downloadFile(filePath, altLocation);
+
+				_downloadSourcesFile(filePath, altLocation);
+			}
+			catch (IOException ioException2) {
+				_logger.log(Level.SEVERE, "Unable to resolve " + coordinate + " from " + location + " or " + altLocation);
+			}
 		}
 
 		return true;
@@ -395,6 +404,9 @@ public class MavenUtil {
 	private static final Set<Coordinate> _coordinateBlacklist = new HashSet<>();
 
 	private static final Set<Coordinate> _coordinateTestWhitelist = new HashSet<>();
+
+	private static final String _LIFERAY_REPO =
+		"https://repository-cdn.liferay.com/nexus/content/groups/public/";
 
 	private static final String _SEARCH_URL =
 		"https://search.maven.org/remotecontent?filepath=";
