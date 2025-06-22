@@ -85,7 +85,8 @@ public class Module implements Comparable<Module> {
 			_resolveTestPath(modulePath, true),
 			_resolveResourcePath(modulePath, "test"),
 			_resolveTestPath(modulePath, false),
-			_resolveResourcePath(modulePath, "testIntegration"), jspPath,
+			_resolveResourcePath(modulePath, "testIntegration"),
+			_resolveJmhPath(modulePath), jspPath,
 			moduleDependencies, jarDependencies,
 			_resolvePortalModuleDependencies(
 				portalModuleDependencyProperties,
@@ -136,6 +137,10 @@ public class Module implements Comparable<Module> {
 
 	public String getJdkVersion() {
 		return _jdkVersion;
+	}
+
+	public Path getJmhPath() {
+		return _jmhPath;
 	}
 
 	public Path getJspPath() {
@@ -305,6 +310,17 @@ public class Module implements Comparable<Module> {
 		return new HashSet<>(Arrays.asList(StringUtil.split(sb.toString(), ',')));
 	}
 
+	private static Path _resolveJmhPath(Path modulePath) {
+		Path resolvedJmhSrcPath = modulePath.resolve(
+			Paths.get("src", "jmh", "java"));
+
+		if (Files.exists(resolvedJmhSrcPath)) {
+			return resolvedJmhSrcPath;
+		}
+
+		return null;
+	}
+
 	private static Path _resolveResourcePath(Path modulePath, String type) {
 		Path resolvedResourcePath = modulePath.resolve(
 			Paths.get("src", type, "resources"));
@@ -375,7 +391,7 @@ public class Module implements Comparable<Module> {
 		Path projectPath, Path modulePath, Path sourcePath,
 		Path sourceResourcePath, Path testUnitPath, Path testUnitResourcePath,
 		Path testIntegrationPath, Path testIntegrationResourcePath,
-		Path jspPath, Set<Dependency> moduleDependencies,
+		Path jmhPath, Path jspPath, Set<Dependency> moduleDependencies,
 		Set<Dependency> jarDependencies, Set<String> portalModuleDependencies,
 		String jdkVersion) {
 
@@ -387,6 +403,7 @@ public class Module implements Comparable<Module> {
 		_testUnitResourcePath = testUnitResourcePath;
 		_testIntegrationPath = testIntegrationPath;
 		_testIntegrationResourcePath = testIntegrationResourcePath;
+		_jmhPath = jmhPath;
 		_jspPath = jspPath;
 		_moduleDependencies = moduleDependencies;
 		_jarDependencies = jarDependencies;
@@ -403,6 +420,7 @@ public class Module implements Comparable<Module> {
 
 	private final Set<Dependency> _jarDependencies;
 	private final String _jdkVersion;
+	private final Path _jmhPath;
 	private final Path _jspPath;
 	private final Set<Dependency> _moduleDependencies;
 	private final Path _modulePath;

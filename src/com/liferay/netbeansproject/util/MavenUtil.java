@@ -321,6 +321,11 @@ public class MavenUtil {
 
 		String buildGradleContent = new String(Files.readAllBytes(buildGradlePath));
 
+		if (buildGradleContent.contains("me.champeau.jmh")) {
+			coordinates.add(
+				new Coordinate("org.openjdk.jmh", "jmh-core", "1.37", false));
+		}
+
 		for (String line : StringUtil.split(buildGradleContent, '\n')) {
 			line = line.trim();
 

@@ -99,6 +99,10 @@ test.${module.getModuleName()}.test-unit-resources.dir=${"$"}{file.reference.${m
 file.reference.${module.getModuleName()}-test-integration-resources=${module.getTestIntegrationResourcePath()}
 test.${module.getModuleName()}.test-integration-resources.dir=${"$"}{file.reference.${module.getModuleName()}-test-integration-resources}
 </#if>
+<#if module.getJmhPath()??>
+file.reference.${module.getModuleName()}-jmh.src=${module.getJmhPath()}
+src.${module.getModuleName()}.jmh.dir=${"$"}{file.reference.${module.getModuleName()}-jmh.src}
+</#if>
 <#if module.getJspPath()??>
 file.reference.${module.getModuleName()}-jsp.src=${module.getJspPath()}
 src.${module.getModuleName()}.jsp.dir=${"$"}{file.reference.${module.getModuleName()}-jsp.src}
