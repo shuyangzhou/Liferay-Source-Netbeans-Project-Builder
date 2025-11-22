@@ -266,7 +266,7 @@ public class Module implements Comparable<Module> {
 		throws IOException {
 
 		if (!Files.exists(gradleFilePath) || isTopLevel) {
-			return "1.8";
+			return "21";
 		}
 
 		List<String> lines = Files.readAllLines(gradleFilePath);
@@ -279,7 +279,7 @@ public class Module implements Comparable<Module> {
 			}
 		}
 
-		return "1.8";
+		return "21";
 	}
 
 	private static Set<String> _resolvePortalModuleDependencies(

@@ -33,8 +33,8 @@ javac.compilerargs=
 javac.deprecation=false
 javac.processorpath=\
 	${"$"}{javac.classpath}
-javac.source=1.8
-javac.target=1.8
+javac.source=21
+javac.target=21
 javac.test.classpath=\
 	${"$"}{build.classes.dir}:\
 	${"$"}{javac.classpath}
