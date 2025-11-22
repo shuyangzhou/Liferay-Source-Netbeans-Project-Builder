@@ -74,6 +74,10 @@ public class MavenUtil {
 
 		String location = _toLocation(filePath);
 
+		if (location == null) {
+			return false;
+		}
+
 		try {
 			_downloadFile(filePath, location);
 
@@ -106,7 +110,7 @@ public class MavenUtil {
 
 			int code = httpURLConnection.getResponseCode();
 
-			if (code == HttpURLConnection.HTTP_MOVED_TEMP) {
+			if ((code == HttpURLConnection.HTTP_MOVED_TEMP) || code == HttpURLConnection.HTTP_MOVED_PERM) {
 				return httpURLConnection.getHeaderField("Location");
 			}
 
@@ -115,7 +119,8 @@ public class MavenUtil {
 					" due to response code " + code);
 		}
 
-		throw new IllegalStateException("Unable to get location for " + url);
+		//throw new IllegalStateException("Unable to get location for " + url);
+		return null;
 	}
 
 	private static Path _downloadSourcesFile(
@@ -259,7 +264,7 @@ public class MavenUtil {
 
 		mergedCoordinates.addAll(_coordinateTestWhitelist);
 
-		mergedCoordinates.removeAll(_coordinateBlacklist);		
+		mergedCoordinates.removeAll(_coordinateBlacklist);
 
 		System.out.println(
 			"Found " + mergedCoordinates.size() + " unique coordinates");
