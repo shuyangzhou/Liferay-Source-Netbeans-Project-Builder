@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Properties;
 import org.junit.After;
 import org.junit.Assert;
@@ -34,7 +36,7 @@ public class ModuleTest {
 	@Before
 	public void setup() throws IOException {
 		_projectDependencyProperties = PropertiesUtil.loadProperties(
-			Paths.get("project-dependency.properties"));
+			Paths.get("portal-module-dependency.properties"));
 	}
 
 	@After
@@ -52,7 +54,9 @@ public class ModuleTest {
 		_createDirectories(srcPath, unitPath, integrationPath);
 
 		Module module = Module.createModule(
-			null, _rootPath, null, null, _projectDependencyProperties);
+			_rootPath, _rootPath, new HashSet<>(), new HashSet<>(),
+			_projectDependencyProperties, _rootPath, false,
+			_rootPath.getParent(), Collections.emptySet());
 
 		Assert.assertEquals(srcPath, module.getSourcePath());
 		Assert.assertEquals(unitPath, module.getTestUnitPath());
@@ -69,7 +73,9 @@ public class ModuleTest {
 		_createDirectories(srcPath, unitPath, integrationPath);
 
 		Module module = Module.createModule(
-			null, _rootPath, null, null, _projectDependencyProperties);
+			_rootPath, _rootPath, new HashSet<>(), new HashSet<>(),
+			_projectDependencyProperties, _rootPath, false,
+			_rootPath.getParent(), Collections.emptySet());
 
 		Assert.assertEquals(srcPath, module.getSourcePath());
 		Assert.assertEquals(unitPath, module.getTestUnitPath());
@@ -83,7 +89,9 @@ public class ModuleTest {
 		Files.createDirectories(unitTestPath);
 
 		Module module = Module.createModule(
-			null, _rootPath, null, null, _projectDependencyProperties);
+			_rootPath, _rootPath, new HashSet<>(), new HashSet<>(),
+			_projectDependencyProperties, _rootPath, false,
+			_rootPath.getParent(), Collections.emptySet());
 
 		Assert.assertNull(module.getSourcePath());
 		Assert.assertEquals(unitTestPath, module.getTestUnitPath());
@@ -97,7 +105,9 @@ public class ModuleTest {
 		Files.createDirectories(integrationTestPath);
 
 		Module module = Module.createModule(
-			null, _rootPath, null, null, _projectDependencyProperties);
+			_rootPath, _rootPath, new HashSet<>(), new HashSet<>(),
+			_projectDependencyProperties, _rootPath, false,
+			_rootPath.getParent(), Collections.emptySet());
 
 		Assert.assertNull(module.getSourcePath());
 		Assert.assertEquals(
@@ -113,7 +123,9 @@ public class ModuleTest {
 		_createDirectories(unitTestPath, integrationTestPath);
 
 		Module module = Module.createModule(
-			null, _rootPath, null, null, _projectDependencyProperties);
+			_rootPath, _rootPath, new HashSet<>(), new HashSet<>(),
+			_projectDependencyProperties, _rootPath, false,
+			_rootPath.getParent(), Collections.emptySet());
 
 		Assert.assertNull(module.getSourcePath());
 		Assert.assertEquals(unitTestPath, module.getTestUnitPath());
@@ -129,7 +141,9 @@ public class ModuleTest {
 		Files.createDirectories(srcPath);
 
 		Module module = Module.createModule(
-			null, _rootPath, null, null, _projectDependencyProperties);
+			_rootPath, _rootPath, new HashSet<>(), new HashSet<>(),
+			_projectDependencyProperties, _rootPath, false,
+			_rootPath.getParent(), Collections.emptySet());
 
 		Assert.assertEquals(srcPath, module.getSourcePath());
 	}
@@ -148,7 +162,9 @@ public class ModuleTest {
 			testIntegrationResourcesPath);
 
 		Module module = Module.createModule(
-			null, _rootPath, null, null, _projectDependencyProperties);
+			_rootPath, _rootPath, new HashSet<>(), new HashSet<>(),
+			_projectDependencyProperties, _rootPath, false,
+			_rootPath.getParent(), Collections.emptySet());
 
 		Assert.assertEquals(
 			srcResourcesPath, module.getSourceResourcePath());
@@ -165,6 +181,6 @@ public class ModuleTest {
 		}
 	}
 
-	private static Path _rootPath = Paths.get("Unit-Test-Model");
+	private static Path _rootPath = Paths.get("test-out", "Unit-Test-Model");
 	private static Properties _projectDependencyProperties;
 }
