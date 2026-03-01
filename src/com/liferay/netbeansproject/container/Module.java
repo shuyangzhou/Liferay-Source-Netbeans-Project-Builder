@@ -348,7 +348,8 @@ public class Module implements Comparable<Module> {
 
 		sourcePath = modulePath.resolve("src");
 
-		if (Files.exists(sourcePath.resolve("main")) ||
+		if (!Files.exists(sourcePath) ||
+			Files.exists(sourcePath.resolve("main")) ||
 			Files.exists(sourcePath.resolve("test")) ||
 			Files.exists(sourcePath.resolve("testIntegration"))) {
 
