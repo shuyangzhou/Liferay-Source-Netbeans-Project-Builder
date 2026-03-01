@@ -197,6 +197,17 @@ public class MavenUtil {
 			_coordinateTestWhitelist.add(coordinate);
 		}
 
+		Properties portalLibProperties = PropertiesUtil.loadProperties(
+			portalPath.resolve("lib/portal/dependencies.properties"));
+
+		for (Object value : portalLibProperties.values()) {
+			Coordinate coordinate = new Coordinate(String.valueOf(value));
+
+			coordinate.setTest(true);
+
+			_coordinateTestWhitelist.add(coordinate);
+		}
+
 		_coordinateTestWhitelist.removeAll(_coordinateBlacklist);
 
 		String ignoredDirs = PropertiesUtil.getRequiredProperty(
@@ -252,9 +263,6 @@ public class MavenUtil {
 		for (List<Coordinate> coordinates : _mavenCoordinates.values()) {
 			mergedCoordinates.addAll(coordinates);
 		}
-
-		Properties portalLibProperties = PropertiesUtil.loadProperties(
-			portalPath.resolve("lib/portal/dependencies.properties"));
 
 		for (Object value : portalLibProperties.values()) {
 			Coordinate coordinate = new Coordinate(String.valueOf(value));
