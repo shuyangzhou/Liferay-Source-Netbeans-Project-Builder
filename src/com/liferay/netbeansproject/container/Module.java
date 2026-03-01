@@ -23,6 +23,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -131,7 +132,7 @@ public class Module implements Comparable<Module> {
 		return false;
 	}
 
-	public Set<Dependency> getJarDependencies() {
+	public List<Dependency> getJarDependencies() {
 		return _jarDependencies;
 	}
 
@@ -147,7 +148,7 @@ public class Module implements Comparable<Module> {
 		return _jspPath;
 	}
 
-	public Set<Dependency> getModuleDependencies() {
+	public List<Dependency> getModuleDependencies() {
 		return _moduleDependencies;
 	}
 
@@ -406,8 +407,15 @@ public class Module implements Comparable<Module> {
 		_testIntegrationResourcePath = testIntegrationResourcePath;
 		_jmhPath = jmhPath;
 		_jspPath = jspPath;
-		_moduleDependencies = moduleDependencies;
-		_jarDependencies = jarDependencies;
+
+		_moduleDependencies = new ArrayList<>(moduleDependencies);
+
+		_moduleDependencies.sort(null);
+
+		_jarDependencies = new ArrayList<>(jarDependencies);
+
+		_jarDependencies.sort(null);
+
 		_portalModuleDependencies = portalModuleDependencies;
 		_jdkVersion = jdkVersion;
 
@@ -419,11 +427,11 @@ public class Module implements Comparable<Module> {
 		}
 	}
 
-	private final Set<Dependency> _jarDependencies;
+	private final List<Dependency> _jarDependencies;
 	private final String _jdkVersion;
 	private final Path _jmhPath;
 	private final Path _jspPath;
-	private final Set<Dependency> _moduleDependencies;
+	private final List<Dependency> _moduleDependencies;
 	private final Path _modulePath;
 	private final Set<String> _portalModuleDependencies;
 	private final Path _projectPath;
