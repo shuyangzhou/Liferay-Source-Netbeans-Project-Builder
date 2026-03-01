@@ -39,6 +39,10 @@ public class Coordinate implements Comparable<Coordinate> {
 	}
 
 	public Dependency toDependency(Path basePath) {
+		return toDependency(basePath, _test);
+	}
+
+	public Dependency toDependency(Path basePath, boolean test) {
 		Path sourcePath = basePath.resolve(_filePath.replace(".jar", "-sources.jar"));
 
 		if (Files.notExists(sourcePath)) {
@@ -48,7 +52,7 @@ public class Coordinate implements Comparable<Coordinate> {
 			sourcePath = sourcePath.toAbsolutePath();
 		}
 
-		return new Dependency(basePath.resolve(_filePath).toAbsolutePath(), sourcePath, _test);
+		return new Dependency(basePath.resolve(_filePath).toAbsolutePath(), sourcePath, test);
 	}
 
 	private static String _toFilePath(String groupId, String artifactId, String version) {

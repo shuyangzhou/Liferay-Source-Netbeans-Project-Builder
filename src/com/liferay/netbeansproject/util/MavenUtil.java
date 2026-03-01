@@ -48,8 +48,19 @@ public class MavenUtil {
 			}
 		}
 
-		for (Coordinate coordinate : _coordinateTestWhitelist) {
-			dependencies.add(coordinate.toDependency(_cachePath));
+		Path modulePath = buildGradlePath.getParent();
+
+		String moduleName = String.valueOf(modulePath.getFileName());
+
+		if (moduleName.endsWith("-test-util")) {
+			for (Coordinate coordinate : _coordinateTestWhitelist) {
+				dependencies.add(coordinate.toDependency(_cachePath, false));
+			}
+		}
+		else {
+			for (Coordinate coordinate : _coordinateTestWhitelist) {
+				dependencies.add(coordinate.toDependency(_cachePath));
+			}
 		}
 
 		return dependencies;
